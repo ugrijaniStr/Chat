@@ -1,0 +1,87 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat u Realnom Vremenu</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+</head>
+<body>
+    <div class = "mainBox">
+        <div class="chatForm">
+            <div id="chat"></div>
+        </div>
+        <div class="inputForm">
+            <input type = "text" name = "username" id = "username" placeholder = "Username" required>
+            <input class = "msgInput" id="message" placeholder = "Poruka..." autocomplete="off"/>
+            <button onclick="sendMessage()">Pošalji</button>
+        </div>
+    </div>
+
+    <script>
+        let username;
+        const socket = io();
+        const chat = document.getElementById('chat');
+
+        getUsername = () => {
+            username = document.getElementById('username').value;
+            elem = document.getElementById('popupArea');
+            elem.style = "display: none;";
+        }
+
+
+        socket.on('message', function(msg) {
+            const p = document.createElement('p');
+            p.textContent = msg;
+            chat.appendChild(p);
+            chat.scrollTop = chat.scrollHeight;
+        });
+
+        function sendMessage() {
+            const input = document.getElementById('message');
+            const username = document.getElementById('username').value;
+            if (message.trim() !== '') {
+                socket.send(`${username}: ${message}`);
+                input.value = '';
+            }
+        }
+
+        document.getElementById('message').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: rgb(34, 33, 33);
+        }
+        .mainBox {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .chatForm{
+            width: 100%;
+            height: 96%;
+        }
+
+        .inputForm {
+            width: 100%;
+            height: 4%;
+            display: flex;
+        }
+
+        .msgInput {
+            width: 80%;
+            height: 10%;
+            padding: 2%;
+            color: white;
+            outline: none;
+        }
+    </style>
+</body>
+</html>
