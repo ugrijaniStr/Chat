@@ -1,4 +1,5 @@
 import random
+import requests
 
 class Crypto():
     prefix_list = [
@@ -122,10 +123,17 @@ class Main():
     def main_crypto():
         prefix = random.choice(Crypto.prefix_list)
         sufix = random.choice(Crypto.sufix_list)
-        message = input("Crypto: ")
 
-        encrypted = Crypto.crypto_sys(prefix, sufix, message)
-        print(f"{encrypted}\n")
+        url = "http://141.227.140.54:9583/send"
+
+        while True:
+            message = str(input("Enter message: "))
+            if(message == "!break"):
+                print("End...")
+                break
+            else:
+                crypted = Crypto.crypto_sys(prefix, sufix, message)
+                requests.post(f'{url}', json = {'message': f'{crypted}'})
 
     @staticmethod
     def main_decrypto():
